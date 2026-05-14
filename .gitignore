@@ -218,3 +218,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Large local model dumps (API uses ``data/model.joblib``)
+data/model.pkl

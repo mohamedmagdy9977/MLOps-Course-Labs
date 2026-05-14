@@ -4,21 +4,35 @@ Model loading and prediction logic.
 The model must be loaded ONCE at module level, NOT inside the predict function.
 """
 
-# TODO 1: Load your serialized churn model from data/model.joblib
-model = ...
+from pathlib import Path
+
+import joblib
+
+from app.churn_schema import ChurnCustomerRequest
+from app.preprocess import customer_to_matrix
+
+_MODEL_PATH = Path(__file__).resolve().parent.parent / "data" / "model.joblib"
+pipeline = joblib.load(_MODEL_PATH)
 
 
-def predict_churn(features: list[float]) -> int:
-    """
-    Takes a list of feature values and returns a churn prediction (0 or 1).
-    """
-    # TODO 2: Use model.predict() to get a prediction and return it as an int
-    #         Hint: model.predict() expects a 2D array
-    pass
+def predict_customer(customer: ChurnCustomerRequest) -> int:
+    """Encode raw customer fields and return churn label (0 or 1)."""
+    X = customer_to_matrix(customer)
+    return int(pipeline.predict(X)[0])
 
 
 if __name__ == "__main__":
-    # TODO 3: Replace with sample features that match your model
-    sample = []
-    print(f"Input:      {sample}")
-    print(f"Prediction: {predict_churn(sample)}")
+    sample = ChurnCustomerRequest(
+        CreditScore=650,
+        Geography="France",
+        Gender="Female",
+        Age=42,
+        Tenure=3,
+        Balance=120_000.0,
+        NumOfProducts=2,
+        HasCrCard=1,
+        IsActiveMember=1,
+        EstimatedSalary=75_000.0,
+    )
+    print(f"Input:      {sample.model_dump()}")
+    print(f"Prediction: {predict_customer(sample)}")
