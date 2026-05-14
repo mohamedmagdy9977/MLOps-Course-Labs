@@ -2,7 +2,7 @@
 
 ## Setup
 
-- [ ] Fork <https://github.com/Heba-Atef99/MLOps-Course-Labs>
+- [ ] Fork <https://github.com/ishraq-hassan/MLOps-Course-Labs>
 - [ ] Clone your fork locally
 - [ ] Install dependencies: `uv sync` or `pip install -e ".[dev]"`
 - [ ] Install pre-commit hooks: `uv run pre-commit install`
