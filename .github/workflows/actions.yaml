@@ -33,7 +33,7 @@ jobs:
  
       - name: Run pytest (unit tests)
         run: |
-          pytest tests/ -v \    
+          PYTHONPATH=. pytest tests/ -v \    
             --cov=app --cov=main \
             --cov-report=term-missing
  
