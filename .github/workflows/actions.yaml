@@ -31,7 +31,7 @@ jobs:
           pip install -e .
           pip install "pytest>=9.0.3" "pytest-cov>=7.1.0"
 
-      - name: Run pytest (unit tests)
+      - name: Run pytest
         run: |
           PYTHONPATH=. pytest tests/ -v \
             --cov=app --cov=main \
@@ -67,7 +67,6 @@ jobs:
             echo "Waiting for API... ($i/30)"
             sleep 2
           done
-          echo "API did not become ready in time"
           docker logs api
           exit 1
 
@@ -111,3 +110,21 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
             ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  deploy_ec2:
+    needs: test_build_push
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+            docker stop ${{ env.IMAGE_NAME }} || true
+            docker rm ${{ env.IMAGE_NAME }} || true
+            docker run -d -p 8000:8000 --name ${{ env.IMAGE_NAME }} \
+              ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
