@@ -112,5 +112,5 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/churn-prediction-api:latest
             docker stop churn-prediction-api || true
             docker rm churn-prediction-api || true
-            docker run -d -p 8000:8000 --name churn-prediction-api \
+            docker run -d -p 443:8000 --name churn-prediction-api \
               ${{ secrets.DOCKER_USERNAME }}/churn-prediction-api:latest
