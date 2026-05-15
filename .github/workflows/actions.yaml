@@ -9,7 +9,6 @@ on:
       - main
  
 env:
-  IMAGE_NAME: churn-prediction-api
   CONTAINER_PORT: "8000"
  
 jobs:
@@ -34,7 +33,7 @@ jobs:
  
       - name: Run pytest (unit tests)
         run: |
-          PYTHONPATH=. pytest tests/ -v \
+          pytest tests/ -v \    
             --cov=app --cov=main \
             --cov-report=term-missing
  
@@ -92,7 +91,7 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
-            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}  #whyyy
  
   deploy-to-ec2:
     name: Connecting to EC2 instance
@@ -106,8 +105,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          # env vars are not available in the remote SSH shell,
-          # so the image name and port are hardcoded here
+
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/churn-prediction-api:latest
             docker stop churn-prediction-api || true

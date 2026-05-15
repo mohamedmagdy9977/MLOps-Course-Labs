@@ -31,6 +31,7 @@ dev = [
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
     "ruff>=0.15.12",
+    "locust>=2.32.0",
 ]
 telemetry = [
     "hyperdx-opentelemetry==0.3.0",
@@ -41,3 +42,4 @@ telemetry = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
+collect_ignore = ["locust_test.py"]
