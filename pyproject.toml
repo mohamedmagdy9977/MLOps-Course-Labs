@@ -18,12 +18,24 @@ dependencies = [
     "scikit-learn>=1.8.0",
 ]
 
+[project.optional-dependencies]
+telemetry = [
+    "hyperdx-opentelemetry==0.3.0",
+    "opentelemetry-distro==0.51b0",
+    "opentelemetry-instrumentation-asgi==0.51b0",
+]
+
 [dependency-groups]
 dev = [
     "pre-commit>=4.2.0",
     "pytest>=9.0.3",
     "pytest-cov>=7.1.0",
     "ruff>=0.15.12",
+]
+telemetry = [
+    "hyperdx-opentelemetry==0.3.0",
+    "opentelemetry-distro==0.51b0",
+    "opentelemetry-instrumentation-asgi==0.51b0",
 ]
 
 [tool.pytest.ini_options]
